@@ -4,17 +4,75 @@
 SET search_path TO "DreamVault";
 
 -- ============================================================
+-- Roles
+-- ============================================================
+CREATE TABLE IF NOT EXISTS "Roles" (
+    "RoleId"      SERIAL PRIMARY KEY,
+    "RoleName"    VARCHAR(20) NOT NULL UNIQUE
+        CHECK ("RoleName" IN ('Admin', 'User')),
+    "Description" VARCHAR(200),
+    "CreatedDate" TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+-- ============================================================
 -- Users
 -- ============================================================
 CREATE TABLE IF NOT EXISTS "Users" (
-    "UserId"       SERIAL PRIMARY KEY,
-    "Name"         VARCHAR(150) NOT NULL,
-    "Email"        VARCHAR(200) NOT NULL UNIQUE,
-    "PasswordHash" VARCHAR(500) NOT NULL,
-    "Role"         VARCHAR(20) NOT NULL DEFAULT 'User'
-        CHECK ("Role" IN ('Admin', 'User')),
-    "CreatedDate"  TIMESTAMP NOT NULL DEFAULT NOW(),
-    "UpdatedDate"  TIMESTAMP NOT NULL DEFAULT NOW()
+    "UserId"              SERIAL PRIMARY KEY,
+    "Username"            VARCHAR(100) NOT NULL UNIQUE,
+    "Email"               VARCHAR(200) NOT NULL UNIQUE,
+    "FirstName"           VARCHAR(100) NOT NULL,
+    "LastName"            VARCHAR(100),
+    "PasswordHash"        VARCHAR(500) NOT NULL,
+    "RoleId"              INTEGER NOT NULL REFERENCES "Roles" ("RoleId"),
+    "IsActive"            BOOLEAN NOT NULL DEFAULT TRUE,
+    "IsLocked"            BOOLEAN NOT NULL DEFAULT FALSE,
+    "FailedLoginCount"    INTEGER NOT NULL DEFAULT 0,
+    "LastFailedLoginDate" TIMESTAMP,
+    "LastLoginDate"       TIMESTAMP,
+    "IsDeleted"           BOOLEAN NOT NULL DEFAULT FALSE,
+    "DeletedDate"         TIMESTAMP,
+    "DeletedBy"           INTEGER,
+    "CreatedDate"         TIMESTAMP NOT NULL DEFAULT NOW(),
+    "UpdatedDate"         TIMESTAMP NOT NULL DEFAULT NOW(),
+    "CreatedBy"           INTEGER,
+    "UpdatedBy"           INTEGER
+);
+
+-- ============================================================
+-- LoginLogs
+-- ============================================================
+CREATE TABLE IF NOT EXISTS "LoginLogs" (
+    "LoginLogId"       SERIAL PRIMARY KEY,
+    "UserId"           INTEGER REFERENCES "Users" ("UserId") ON DELETE SET NULL,
+    "Username"         VARCHAR(100) NOT NULL,
+    "LoginDateTime"    TIMESTAMP NOT NULL DEFAULT NOW(),
+    "LogoutDateTime"   TIMESTAMP,
+    "Success"          BOOLEAN NOT NULL,
+    "FailureReason"    VARCHAR(200),
+    "IpAddress"        VARCHAR(64),
+    "UserAgent"        VARCHAR(500),
+    "Device"           VARCHAR(50),
+    "Browser"          VARCHAR(50),
+    "OperatingSystem"  VARCHAR(50),
+    "CreatedDate"      TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+-- ============================================================
+-- AuditLogs
+-- ============================================================
+CREATE TABLE IF NOT EXISTS "AuditLogs" (
+    "AuditLogId"  SERIAL PRIMARY KEY,
+    "UserId"      INTEGER REFERENCES "Users" ("UserId") ON DELETE SET NULL,
+    "Action"      VARCHAR(50) NOT NULL,
+    "EntityName"  VARCHAR(50),
+    "EntityId"    VARCHAR(50),
+    "Description" VARCHAR(1000),
+    "OldValue"    VARCHAR(2000),
+    "NewValue"    VARCHAR(2000),
+    "IpAddress"   VARCHAR(64),
+    "UserAgent"   VARCHAR(500),
+    "CreatedDate" TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 -- ============================================================

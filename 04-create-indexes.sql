@@ -20,3 +20,17 @@ CREATE INDEX IF NOT EXISTS "IX_StockTransactions_Type"    ON "StockTransactions"
 CREATE INDEX IF NOT EXISTS "IX_PortfolioSnapshots_Date"   ON "PortfolioSnapshots" ("SnapshotDate");
 
 CREATE UNIQUE INDEX IF NOT EXISTS "UX_Stocks_Symbol"      ON "Stocks" ("Symbol");
+
+CREATE UNIQUE INDEX IF NOT EXISTS "UX_Users_Username"     ON "Users" ("Username");
+CREATE UNIQUE INDEX IF NOT EXISTS "UX_Users_Email"        ON "Users" ("Email");
+CREATE INDEX IF NOT EXISTS "IX_Users_RoleId"              ON "Users" ("RoleId");
+CREATE INDEX IF NOT EXISTS "IX_Users_IsActive"            ON "Users" ("IsActive");
+
+CREATE INDEX IF NOT EXISTS "IX_LoginLogs_UserId"          ON "LoginLogs" ("UserId");
+CREATE INDEX IF NOT EXISTS "IX_LoginLogs_LoginDateTime"   ON "LoginLogs" ("LoginDateTime");
+CREATE INDEX IF NOT EXISTS "IX_LoginLogs_Success"         ON "LoginLogs" ("Success");
+
+CREATE INDEX IF NOT EXISTS "IX_AuditLogs_UserId"          ON "AuditLogs" ("UserId");
+CREATE INDEX IF NOT EXISTS "IX_AuditLogs_CreatedDate"     ON "AuditLogs" ("CreatedDate");
+CREATE INDEX IF NOT EXISTS "IX_AuditLogs_Action"          ON "AuditLogs" ("Action");
+CREATE INDEX IF NOT EXISTS "IX_AuditLogs_EntityName"      ON "AuditLogs" ("EntityName");

@@ -4,23 +4,33 @@
 SET search_path TO "DreamVault";
 
 -- ============================================================
+-- Roles
+-- ============================================================
+INSERT INTO "Roles" ("RoleName", "Description")
+SELECT v."RoleName", v."Description" FROM (VALUES
+    ('Admin', 'Full administrative access: user management, audit/login logs, system monitoring'),
+    ('User',  'Manages their own dreams, goals and financial planning')
+) AS v("RoleName", "Description")
+WHERE NOT EXISTS (SELECT 1 FROM "Roles" r WHERE r."RoleName" = v."RoleName");
+
+-- ============================================================
 -- Users
 -- Demo login credentials (change these after first login):
---   Admin: sunilbgadakari@gmail.com / Admin@123
---   User:  demo.user@dreamvault.local / User@123
+--   Admin: username "admin" / Admin@123
+--   User:  username "demo"  / Demo@123
 -- Password hashes below are ASP.NET Core Identity PasswordHasher<T> output (PBKDF2).
 -- ============================================================
-INSERT INTO "Users" ("Name", "Email", "PasswordHash", "Role")
-SELECT 'Sunil Gadakari', 'sunilbgadakari@gmail.com',
+INSERT INTO "Users" ("Username", "Email", "FirstName", "LastName", "PasswordHash", "RoleId", "IsActive")
+SELECT 'admin', 'sunilbgadakari@gmail.com', 'Sunil', 'Gadakari',
        'AQAAAAIAAYagAAAAEEawUmfFpezawjOy3DaioUfMRjwgvsLRY5RCw8SanPdM7xGKPtIaH4T3uOQMdlU1qg==',
-       'Admin'
-WHERE NOT EXISTS (SELECT 1 FROM "Users" WHERE "Email" = 'sunilbgadakari@gmail.com');
+       (SELECT "RoleId" FROM "Roles" WHERE "RoleName" = 'Admin'), TRUE
+WHERE NOT EXISTS (SELECT 1 FROM "Users" WHERE "Username" = 'admin');
 
-INSERT INTO "Users" ("Name", "Email", "PasswordHash", "Role")
-SELECT 'Demo User', 'demo.user@dreamvault.local',
-       'AQAAAAIAAYagAAAAEHtMMjYczKx9XALVZdeo1NZDbeOAGxU3llzSAD3TMcZBg3zXnxZ4L84B/mQKtTJpMg==',
-       'User'
-WHERE NOT EXISTS (SELECT 1 FROM "Users" WHERE "Email" = 'demo.user@dreamvault.local');
+INSERT INTO "Users" ("Username", "Email", "FirstName", "LastName", "PasswordHash", "RoleId", "IsActive")
+SELECT 'demo', 'demo.user@dreamvault.local', 'Demo', 'User',
+       'AQAAAAIAAYagAAAAEEqvoYwxNFi6p9Xt3YDJ7DZZWfGC1sxki1PXJJQKGnRTGEvoOQtTnH2FJGvKlkiw9g==',
+       (SELECT "RoleId" FROM "Roles" WHERE "RoleName" = 'User'), TRUE
+WHERE NOT EXISTS (SELECT 1 FROM "Users" WHERE "Username" = 'demo');
 
 -- ============================================================
 -- Categories
