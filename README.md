@@ -15,7 +15,15 @@ which create the same schema described here.
 | `03-create-tables.sql` | Creates all tables, primary keys, foreign keys and check constraints |
 | `04-create-indexes.sql` | Creates supporting indexes |
 | `05-create-functions.sql` | Creates SQL helper functions (weighted avg price, CAGR, future value, inflation-adjusted cost) mirroring `DreamVaultAPI/Calculations/FinanceCalculator.cs` |
-| `06-seed-data.sql` | Inserts demo data: 1 user, 6 categories, 7 dreams/goals, sample contributions, 6 stocks with buy/sell transactions, and portfolio snapshots |
+| `06-seed-data.sql` | Inserts demo data: 2 users (Admin + User, see below), 6 categories, 7 dreams/goals, sample contributions, 6 stocks with buy/sell transactions, and portfolio snapshots |
+
+`Users.PasswordHash` is hashed with ASP.NET Core Identity's `PasswordHasher<T>` (PBKDF2) — the
+seed script's hashes correspond to these demo logins (used against `DreamVaultAPI`'s `/api/auth/login`):
+
+| Role  | Email | Password |
+|---|---|---|
+| Admin | `sunilbgadakari@gmail.com` | `Admin@123` |
+| User  | `demo.user@dreamvault.local` | `User@123` |
 
 ## Manual setup
 

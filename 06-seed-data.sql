@@ -4,11 +4,23 @@
 SET search_path TO "DreamVault";
 
 -- ============================================================
--- User
+-- Users
+-- Demo login credentials (change these after first login):
+--   Admin: sunilbgadakari@gmail.com / Admin@123
+--   User:  demo.user@dreamvault.local / User@123
+-- Password hashes below are ASP.NET Core Identity PasswordHasher<T> output (PBKDF2).
 -- ============================================================
-INSERT INTO "Users" ("Name", "Email")
-SELECT 'Sunil Gadakari', 'sunilbgadakari@gmail.com'
+INSERT INTO "Users" ("Name", "Email", "PasswordHash", "Role")
+SELECT 'Sunil Gadakari', 'sunilbgadakari@gmail.com',
+       'AQAAAAIAAYagAAAAEEawUmfFpezawjOy3DaioUfMRjwgvsLRY5RCw8SanPdM7xGKPtIaH4T3uOQMdlU1qg==',
+       'Admin'
 WHERE NOT EXISTS (SELECT 1 FROM "Users" WHERE "Email" = 'sunilbgadakari@gmail.com');
+
+INSERT INTO "Users" ("Name", "Email", "PasswordHash", "Role")
+SELECT 'Demo User', 'demo.user@dreamvault.local',
+       'AQAAAAIAAYagAAAAEHtMMjYczKx9XALVZdeo1NZDbeOAGxU3llzSAD3TMcZBg3zXnxZ4L84B/mQKtTJpMg==',
+       'User'
+WHERE NOT EXISTS (SELECT 1 FROM "Users" WHERE "Email" = 'demo.user@dreamvault.local');
 
 -- ============================================================
 -- Categories

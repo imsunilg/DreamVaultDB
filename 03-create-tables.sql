@@ -7,11 +7,14 @@ SET search_path TO "DreamVault";
 -- Users
 -- ============================================================
 CREATE TABLE IF NOT EXISTS "Users" (
-    "UserId"      SERIAL PRIMARY KEY,
-    "Name"        VARCHAR(150) NOT NULL,
-    "Email"       VARCHAR(200) NOT NULL UNIQUE,
-    "CreatedDate" TIMESTAMP NOT NULL DEFAULT NOW(),
-    "UpdatedDate" TIMESTAMP NOT NULL DEFAULT NOW()
+    "UserId"       SERIAL PRIMARY KEY,
+    "Name"         VARCHAR(150) NOT NULL,
+    "Email"        VARCHAR(200) NOT NULL UNIQUE,
+    "PasswordHash" VARCHAR(500) NOT NULL,
+    "Role"         VARCHAR(20) NOT NULL DEFAULT 'User'
+        CHECK ("Role" IN ('Admin', 'User')),
+    "CreatedDate"  TIMESTAMP NOT NULL DEFAULT NOW(),
+    "UpdatedDate"  TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 -- ============================================================
